@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "b0cf9019-70bb-4062-9da1-788cbc7804ee",
+		"name": "AP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24981765"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "personal request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Financial details",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Investor lists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.test(\"Status code is 200\", function () {    pm.response.to.have.status(200);});\r",
+							"if (jsonData.code == 10 && jsonData.description == \"YOU ARE ALREADY REGISTERED. PLEASE LOGIN TO CONTINUE\"){        \r",
+							"    pm.test(\"Check response is 10(usuccessful)\", function () {    pm.expect(jsonData.code).to.eql(10);});    \r",
+							"    pm.test(\"Check user is already logged in\", function () {    \r",
+							"        pm.expect(jsonData.description).to.eql(\"YOU ARE ALREADY REGISTERED. PLEASE LOGIN TO CONTINUE\");});}\r",
+							"        else if (jsonData.code == 10 && jsonData.description == \"ACCOUNT NUMBER EXISTS\"){        \r",
+							"            pm.test(\"Check response is 10(usuccessful)\", function () {    pm.expect(jsonData.code).to.eql(10);});    \r",
+							"            pm.test(\"Check user is already logged in\", function () {    \r",
+							"                pm.expect(jsonData.description).to.eql(\"ACCOUNT NUMBER EXISTS\");});\r",
+							"                }\r",
+							"            else if (jsonData.code === 0 && jsonData.accountNumber !== null){       \r",
+							"                 pm.test(\"Check response is 0(successful)\", function () {   \r",
+							"                     pm.expect(jsonData.code).to.eql(0);    });   \r",
+							"                     pm.test(\"Check description contains otp\", function () {   \r",
+							"                         pm.expect(pm.response.text()).to.include(\"description\") && \r",
+							"                        pm.expect(jsonData.description).to.not.be.null && pm.expect(jsonData.description).to.not.be.empty;        });   \r",
+							"                             pm.environment.set(\"registerotp\", JSON.parse(responseBody).description);pm.test(\"Check request is successful\", function () {        \r",
+							"                            pm.expect(pm.response.text()).to.include(\"successful\") && pm.expect(jsonData.accountNumber).to.not.be.null;});\r",
+							"}\r",
+							"\r",
+							"else if (jsonData.code === 0 && jsonData.accountNumber === null){       \r",
+							"     pm.test(\"Check response is 0(successful)\", function () {    \r",
+							"        pm.expect(jsonData.code).to.eql(0);    });  \r",
+							"      pm.test(\"Check description contains otp\", function () {   \r",
+							"         pm.expect(pm.response.text()).to.include(\"description\") && pm.expect(jsonData.description).to.not.be.null && \r",
+							"        pm.expect(jsonData.description).to.not.be.empty;        });var registerotp = jsonData.description.substring(43, 48);        \r",
+							"        pm.environment.set(\"registerotp\", registerotp);pm.test(\"Check request is succesful\", function () {       \r",
+							"             pm.expect(pm.response.text()).to.include(\"successful\");});\r",
+							"}\r",
+							"else{    console.log(jsonData.description);}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "JWT eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QHFhLnRlYW0iLCJ1c2VySWQiOiI2NzYzMTk3ZC1kMWE2LTQ5NTgtYTVmYi00MmJmYjdjOTgxYzgiLCJhdXRob3JpdGllcyI6WyJST0xFX0NPTU1VTklUWSJdLCJpYXQiOjE2NzU0MzM1NTgsImV4cCI6MTY3NTQ0MDc1OH0.jSjFAO6FCxdH8z5qi-1c2D9ZUNftUSldPTLyE7pOJ1-UdBPPBUQy8iPE7aiiVXEePnbP50r7SQasWgGOm2_Wug",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://oasis-kyc-dev.africaprudential.net/api/v1/admin/investor/list/by/date?start=2022-10-14&end=2022-10-21",
+					"protocol": "https",
+					"host": [
+						"oasis-kyc-dev",
+						"africaprudential",
+						"net"
+					],
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"investor",
+						"list",
+						"by",
+						"date"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "2022-10-14"
+						},
+						{
+							"key": "end",
+							"value": "2022-10-21"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
